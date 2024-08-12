@@ -1,3 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flip Clock</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="flip-clock">
+        <div class="digit" id="hour">
+            <div class="top">0</div>
+            <div class="bottom">0</div>
+        </div>
+        <div class="separator">:</div>
+        <div class="digit" id="minute">
+            <div class="top">0</div>
+            <div class="bottom">0</div>
+        </div>
+        <div class="separator">:</div>
+        <div class="digit" id="second">
+            <div class="top">0</div>
+            <div class="bottom">0</div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
 body {
     display: flex;
     justify-content: center;
@@ -56,3 +85,40 @@ body {
 .digit.flip .bottom {
     transform: translateY(100%);
 }
+
+function updateClock() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+
+    updateDigit('hour', hours);
+    updateDigit('minute', minutes);
+    updateDigit('second', seconds);
+}
+
+function updateDigit(id, value) {
+    const digitElement = document.getElementById(id);
+    const topElement = digitElement.querySelector('.top');
+    const bottomElement = digitElement.querySelector('.bottom');
+    const newTopValue = value[0];
+    const newBottomValue = value[1];
+
+    if (topElement.textContent !== newTopValue) {
+        digitElement.classList.add('flip');
+        setTimeout(() => {
+            topElement.textContent = newTopValue;
+            bottomElement.textContent = newBottomValue;
+            digitElement.classList.remove('flip');
+        }, 300);
+    } else if (bottomElement.textContent !== newBottomValue) {
+        digitElement.classList.add('flip');
+        setTimeout(() => {
+            bottomElement.textContent = newBottomValue;
+            digitElement.classList.remove('flip');
+        }, 300);
+    }
+}
+
+setInterval(updateClock, 1000);
+updateClock(); // Initial call to set time immediately
